@@ -12,20 +12,27 @@
 - [x] Create root `.env.example` and `.env` files
 - [x] Create root `docker-compose.yml` and `README.md`
 
-## Phase 2: API Gateway (NEXT UP)
-- [ ] Implement proxy routing to microservices (`/api/auth/*` & `/api/users/*` → Port 8001, `/api/chat/*` → Port 8003, `/api/calls/*` → Port 8004)
-- [ ] Add central request logging and CORS handling
+## Phase 2: API Gateway (COMPLETED)
+- [x] Implement proxy routing to microservices (`/api/auth/*` & `/api/users/*` → Port 8001, `/api/chat/*` → Port 8003, `/api/calls/*` → Port 8004)
+- [x] Implement request rate limiting (`express-rate-limit`)
+- [x] Implement downstream service liveness monitoring on `GET /health`
+- [x] Verify proxy route forwarding to all downstream services
 
-## Phase 3: Auth & User Service
-- [ ] User Model schema
-- [ ] Register & Login endpoints
-- [ ] JWT tokens & OAuth handlers
-- [ ] Profile CRUD & FCM token handling
-- [ ] User block/unblock feature
+## Phase 3: Auth & User Service (COMPLETED)
+- [x] Mongoose `User` Model schema (`name`, `email`, `passwordHash`, `authProvider`, `googleId`, `appleId`, `profileImage`, `fcmTokens`, `blockedUsers`, `isActive`)
+- [x] Register (`POST /api/auth/register`) with bcrypt hashing
+- [x] Login (`POST /api/auth/login`) returning Access & Refresh JWTs
+- [x] Token Refresh (`POST /api/auth/refresh`) & Logout (`POST /api/auth/logout`)
+- [x] Google & Apple OAuth sign-in handlers
+- [x] Profile Management (`GET /api/users/me`, `PATCH /api/users/me`, `GET /api/users/search`, `GET /api/users/:userId`)
+- [x] FCM token management (`POST /api/users/fcm-token`, `DELETE /api/users/fcm-token`)
+- [x] Block user handlers (`POST /api/users/:userId/block`, `DELETE /api/users/:userId/block`)
+- [x] Verified all Auth & User endpoints via Gateway integration tests
 
-## Phase 4: Chat Service
+## Phase 4: Chat Service (NEXT UP)
 - [ ] Conversation & Message schemas
 - [ ] MongoDB storage & Firestore projection sync
+- [ ] Conversation & Message APIs
 
 ## Phase 5: Notification Service
 - [ ] FCM push notification sender
@@ -48,5 +55,5 @@
 ## Phase 11: Testing
 - [ ] Test suite
 
-## Phase 12: Docker & AWS Deployment
+## Phase 12: Docker & AWS/Render Deployment
 - [ ] Deployment manifests

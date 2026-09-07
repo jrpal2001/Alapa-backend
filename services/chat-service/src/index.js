@@ -16,7 +16,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/health', (req, res) => {
+// Health check endpoints
+app.get(['/health', '/api/chat/health'], (req, res) => {
   sendSuccess(res, { service: config.serviceName, status: 'healthy', uptime: process.uptime() }, 'Chat Service active');
 });
 
