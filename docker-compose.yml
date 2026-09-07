@@ -1,0 +1,108 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:latest
+    container_name: alapa-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - alapa-network
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: services/api-gateway/Dockerfile
+    container_name: alapa-api-gateway
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - NODE_ENV=development
+      - AUTH_USER_SERVICE_URL=http://auth-service:8001
+      - CHAT_SERVICE_URL=http://chat-service:8003
+      - VIDEO_SERVICE_URL=http://video-service:8004
+      - NOTIFICATION_SERVICE_URL=http://notification-service:8005
+    networks:
+      - alapa-network
+    depends_on:
+      - auth-service
+      - chat-service
+      - video-call-service
+      - notification-service
+
+  auth-service:
+    build:
+      context: .
+      dockerfile: services/auth-service/Dockerfile
+    container_name: alapa-auth-service
+    ports:
+      - "8001:8001"
+    environment:
+      - PORT=8001
+      - NODE_ENV=development
+      - MONGO_URI=mongodb://mongo:27017/alapa_auth_user
+      - JWT_SECRET=supersecretjwtkey_change_in_production
+      - JWT_REFRESH_SECRET=superrefreshjwtkey_change_in_production
+    networks:
+      - alapa-network
+    depends_on:
+      - mongo
+
+  chat-service:
+    build:
+      context: .
+      dockerfile: services/chat-service/Dockerfile
+    container_name: alapa-chat-service
+    ports:
+      - "8003:8003"
+    environment:
+      - PORT=8003
+      - NODE_ENV=development
+      - MONGO_URI=mongodb://mongo:27017/alapa_chat
+      - USER_SERVICE_URL=http://auth-service:8001
+      - NOTIFICATION_SERVICE_URL=http://notification-service:8005
+    networks:
+      - alapa-network
+    depends_on:
+      - mongo
+
+  video-call-service:
+    build:
+      context: .
+      dockerfile: services/video-call-service/Dockerfile
+    container_name: alapa-video-call-service
+    ports:
+      - "8004:8004"
+    environment:
+      - PORT=8004
+      - NODE_ENV=development
+      - MONGO_URI=mongodb://mongo:27017/alapa_video
+      - USER_SERVICE_URL=http://auth-service:8001
+      - NOTIFICATION_SERVICE_URL=http://notification-service:8005
+    networks:
+      - alapa-network
+    depends_on:
+      - mongo
+
+  notification-service:
+    build:
+      context: .
+      dockerfile: services/notification-service/Dockerfile
+    container_name: alapa-notification-service
+    ports:
+      - "8005:8005"
+    environment:
+      - PORT=8005
+      - NODE_ENV=development
+    networks:
+      - alapa-network
+
+networks:
+  alapa-network:
+    driver: bridge
+
+volumes:
+  mongo_data:

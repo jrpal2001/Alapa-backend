@@ -1,0 +1,10 @@
+{
+  "name": "@alapa/shared",
+  "version": "1.0.0",
+  "description": "Shared utilities, logger, error handlers for Alapa microservices",
+  "main": "src/index.js",
+  "type": "module",
+  "dependencies": {
+    "winston": "^3.11.0"
+  }
+}

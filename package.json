@@ -1,0 +1,17 @@
+{
+  "name": "alapa-backend",
+  "version": "1.0.0",
+  "description": "Real-Time Communication Platform Microservices Monorepo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start:gateway": "node services/api-gateway/src/index.js",
+    "start:auth": "node services/auth-service/src/index.js",
+    "start:chat": "node services/chat-service/src/index.js",
+    "start:video": "node services/video-call-service/src/index.js",
+    "start:notification": "node services/notification-service/src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
