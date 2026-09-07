@@ -11,7 +11,7 @@ shared/.env
 *.env.production
 *.env.staging
 
-# Firebase & GCP Credentials
+# Firebase & GCP Credential
 *firebase-service-account*.json
 *service-account*.json
 gcp-key.json
