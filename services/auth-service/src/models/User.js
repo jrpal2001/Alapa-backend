@@ -42,6 +42,11 @@ const userSchema = new mongoose.Schema(
       type: [String],
       default: []
     },
+    refreshTokens: {
+      type: [String],
+      default: [],
+      select: false
+    },
     blockedUsers: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -61,6 +66,7 @@ const userSchema = new mongoose.Schema(
 userSchema.methods.toJSON = function () {
   const user = this.toObject();
   delete user.passwordHash;
+  delete user.refreshTokens;
   delete user.__v;
   return user;
 };

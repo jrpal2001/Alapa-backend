@@ -100,6 +100,19 @@ services:
     networks:
       - alapa-network
 
+  coturn:
+    image: coturn/coturn:latest
+    container_name: alapa-coturn
+    ports:
+      - "3478:3478"
+      - "3478:3478/udp"
+      - "5349:5349"
+      - "5349:5349/udp"
+    volumes:
+      - ./infrastructure/turn/turnserver.conf:/etc/coturn/turnserver.conf:ro
+    networks:
+      - alapa-network
+
 networks:
   alapa-network:
     driver: bridge

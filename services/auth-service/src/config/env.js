@@ -14,5 +14,6 @@ export const config = {
   serviceName: 'auth-service',
   mongoUri: process.env.MONGO_URI || 'mongodb://localhost:27017/alapa_auth_user',
   jwtSecret: process.env.JWT_SECRET || 'supersecretkey',
-  jwtRefreshSecret: process.env.JWT_REFRESH_SECRET || 'superrefreshsecretkey'
+  jwtRefreshSecret: process.env.JWT_REFRESH_SECRET || 'superrefreshsecretkey',
+  googleClientId: process.env.GOOGLE_CLIENT_ID || ''
 };

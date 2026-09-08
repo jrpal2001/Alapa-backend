@@ -1,0 +1,128 @@
+services:
+  # -------------------------------------------------------------
+  # 1. API Gateway Service (Port 8000)
+  # -------------------------------------------------------------
+  - type: web
+    name: alapa-api-gateway
+    env: node
+    region: singapore
+    plan: free
+    dockerContext: .
+    dockerfilePath: services/api-gateway/Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: NODE_ENV
+        value: production
+      - key: AUTH_USER_SERVICE_URL
+        fromService:
+          type: web
+          name: alapa-auth-service
+          property: host
+      - key: CHAT_SERVICE_URL
+        fromService:
+          type: web
+          name: alapa-chat-service
+          property: host
+      - key: VIDEO_SERVICE_URL
+        fromService:
+          type: web
+          name: alapa-video-call-service
+          property: host
+      - key: NOTIFICATION_SERVICE_URL
+        fromService:
+          type: web
+          name: alapa-notification-service
+          property: host
+
+  # -------------------------------------------------------------
+  # 2. Auth & User Service (Port 8001)
+  # -------------------------------------------------------------
+  - type: web
+    name: alapa-auth-service
+    env: node
+    region: singapore
+    plan: free
+    dockerContext: .
+    dockerfilePath: services/auth-service/Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 8001
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+
+  # -------------------------------------------------------------
+  # 3. Chat Service (Port 8003)
+  # -------------------------------------------------------------
+  - type: web
+    name: alapa-chat-service
+    env: node
+    region: singapore
+    plan: free
+    dockerContext: .
+    dockerfilePath: services/chat-service/Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 8003
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        fromService:
+          type: web
+          name: alapa-auth-service
+          envVarKey: JWT_SECRET
+
+  # -------------------------------------------------------------
+  # 4. Video Call Service (Port 8004)
+  # -------------------------------------------------------------
+  - type: web
+    name: alapa-video-call-service
+    env: node
+    region: singapore
+    plan: free
+    dockerContext: .
+    dockerfilePath: services/video-call-service/Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 8004
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        fromService:
+          type: web
+          name: alapa-auth-service
+          envVarKey: JWT_SECRET
+
+  # -------------------------------------------------------------
+  # 5. Notification Service (Port 8005)
+  # -------------------------------------------------------------
+  - type: web
+    name: alapa-notification-service
+    env: node
+    region: singapore
+    plan: free
+    dockerContext: .
+    dockerfilePath: services/notification-service/Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 8005
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        fromService:
+          type: web
+          name: alapa-auth-service
+          envVarKey: JWT_SECRET

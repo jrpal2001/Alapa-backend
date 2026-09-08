@@ -15,5 +15,7 @@ export const config = {
   userServiceUrl: process.env.USER_SERVICE_URL || 'http://127.0.0.1:8001',
   notificationServiceUrl: process.env.NOTIFICATION_SERVICE_URL || 'http://127.0.0.1:8005',
   stunServer: process.env.STUN_SERVER || 'stun:stun.l.google.com:19302',
-  turnServer: process.env.TURN_SERVER || ''
+  turnServer: process.env.TURN_SERVER || '',
+  turnUsername: process.env.TURN_USERNAME || 'alapastun',
+  turnCredential: process.env.TURN_CREDENTIAL || 'AlapaTurnSecret2026!'
 };

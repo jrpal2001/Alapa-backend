@@ -13,47 +13,62 @@
 - [x] Create root `docker-compose.yml` and `README.md`
 
 ## Phase 2: API Gateway (COMPLETED)
-- [x] Implement proxy routing to microservices (`/api/auth/*` & `/api/users/*` → Port 8001, `/api/chat/*` → Port 8003, `/api/calls/*` → Port 8004)
+- [x] Implement proxy routing to microservices (`/api/auth/*` & `/api/users/*` → Port 8001, `/api/chat/*` → Port 8003, `/api/calls/*` → Port 8004, `/api/notifications/*` → Port 8005)
 - [x] Implement request rate limiting (`express-rate-limit`)
 - [x] Implement downstream service liveness monitoring on `GET /health`
 - [x] Verify proxy route forwarding to all downstream services
 
 ## Phase 3: Auth & User Service (COMPLETED)
-- [x] Mongoose `User` Model schema (`name`, `email`, `passwordHash`, `authProvider`, `googleId`, `appleId`, `profileImage`, `fcmTokens`, `blockedUsers`, `isActive`)
+- [x] Mongoose `User` Model schema (`name`, `email`, `passwordHash`, `authProvider`, `googleId`, `appleId`, `profileImage`, `fcmTokens`, `blockedUsers`, `isActive`, `refreshTokens` array)
 - [x] Register (`POST /api/auth/register`) with bcrypt hashing
 - [x] Login (`POST /api/auth/login`) returning Access & Refresh JWTs
-- [x] Token Refresh (`POST /api/auth/refresh`) & Logout (`POST /api/auth/logout`)
+- [x] Token Refresh (`POST /api/auth/refresh`) & Logout (`POST /api/auth/logout`) with token rotation & revocation
 - [x] Google & Apple OAuth sign-in handlers
 - [x] Profile Management (`GET /api/users/me`, `PATCH /api/users/me`, `GET /api/users/search`, `GET /api/users/:userId`)
 - [x] FCM token management (`POST /api/users/fcm-token`, `DELETE /api/users/fcm-token`)
 - [x] Block user handlers (`POST /api/users/:userId/block`, `DELETE /api/users/:userId/block`)
 - [x] Verified all Auth & User endpoints via Gateway integration tests
 
-## Phase 4: Chat Service (NEXT UP)
-- [ ] Conversation & Message schemas
-- [ ] MongoDB storage & Firestore projection sync
-- [ ] Conversation & Message APIs
+## Phase 4: Chat Service (COMPLETED)
+- [x] Conversation & Message Mongoose schemas (`alapa_chat` MongoDB database)
+- [x] Firestore realtime projection sync layer (`services/chat-service/src/config/firebase.js`)
+- [x] Create & lookup conversations (`POST /api/chat/conversations`, `GET /api/chat/conversations`)
+- [x] Send text & media messages (`POST /api/chat/messages`)
+- [x] Fetch message history with pagination (`GET /api/chat/conversations/:id/messages`)
+- [x] Mark messages as read & reset unread counts (`POST /api/chat/conversations/:id/read`)
+- [x] Delete conversation (`DELETE /api/chat/conversations/:id`)
+- [x] Verified all Chat endpoints via Gateway integration tests
 
-## Phase 5: Notification Service
-- [ ] FCM push notification sender
+## Phase 5: Notification Service (COMPLETED)
+- [x] FCM Multicast push notification dispatcher (`services/notification-service/src/config/fcm.js`)
+- [x] Chat message push notification endpoint (`POST /api/notifications/send-chat`)
+- [x] High-priority incoming call push notification endpoint (`POST /api/notifications/send-call`)
+- [x] Verified Notification endpoints via Gateway integration tests
 
-## Phase 6: Video Call Service
-- [ ] Call model & call creation logic
+## Phase 6 & 7: Video Call Service & WebRTC Signaling (COMPLETED)
+- [x] Call Mongoose Model schema (`alapa_video` MongoDB database)
+- [x] Call creation & lifecycle state management (`ringing`, `accepted`, `rejected`, `missed`, `cancelled`, `ended`)
+- [x] Firestore WebRTC signaling handler (SDP Offer, Answer, ICE Candidates)
+- [x] Integrated call notification triggers
+- [x] Verified Video Call & Signaling endpoints via Gateway integration tests
 
-## Phase 7: WebRTC Signaling
-- [ ] Firestore WebRTC signaling handler
+## Phase 8: STUN/TURN Infrastructure (COMPLETED)
+- [x] Coturn server configuration setup (`infrastructure/turn/turnserver.conf`)
+- [x] ICE servers configuration endpoint (`GET /api/calls/ice-servers`)
 
-## Phase 8: STUN/TURN
-- [ ] Coturn configuration setup
+## Phase 9: Call History & Advanced Query (COMPLETED)
+- [x] Paginated call logs with filtering by `type` and `status` (`GET /api/calls/history`)
 
-## Phase 9: Call History
-- [ ] Call history endpoints
+## Phase 10: Security & Hardening (COMPLETED)
+- [x] Auth endpoint rate limiting (`/api/auth/login`, `/api/auth/register`)
+- [x] Helmet security headers & CORS policy
+- [x] Input sanitization against MongoDB query injection
 
-## Phase 10: Security
-- [ ] Security hardening & rate limiting
+## Phase 11: Testing & Verification (COMPLETED)
+- [x] End-to-End integration test suite (`scratch/test-final.js`) with 100% pass verification
 
-## Phase 11: Testing
-- [ ] Test suite
-
-## Phase 12: Docker & AWS/Render Deployment
-- [ ] Deployment manifests
+## Phase 12: Docker & Render Deployment (COMPLETED)
+- [x] Multi-service `docker-compose.yml` with Coturn & MongoDB
+- [x] Dockerfiles for all 5 microservices
+- [x] Render Infrastructure as Code manifest (`render.yaml`)
+- [x] Comprehensive deployment documentation (`DEPLOYMENT.md`)

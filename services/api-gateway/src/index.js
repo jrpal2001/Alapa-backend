@@ -20,7 +20,19 @@ const limiter = rateLimit({
   legacyHeaders: false,
   message: { success: false, message: 'Too many requests from this IP, please try again later.' }
 });
+
+// Auth Sensitive Endpoint Rate Limiter (Brute-force mitigation)
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20, // max 20 login/register attempts per 15 mins per IP
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: 'Too many authentication attempts, please try again after 15 minutes.' }
+});
+
 app.use(limiter);
+app.use('/api/auth/login', authLimiter);
+app.use('/api/auth/register', authLimiter);
 
 // Request Logger Middleware
 app.use((req, res, next) => {
@@ -47,6 +59,7 @@ app.use('/api/auth', createProxy(config.services.authUser, '/api/auth'));
 app.use('/api/users', createProxy(config.services.authUser, '/api/users'));
 app.use('/api/chat', createProxy(config.services.chat, '/api/chat'));
 app.use('/api/calls', createProxy(config.services.video, '/api/calls'));
+app.use('/api/notifications', createProxy(config.services.notification, '/api/notifications'));
 
 // Enhanced Gateway Health Check Route
 app.get('/health', async (req, res) => {
